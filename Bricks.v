@@ -7,7 +7,12 @@ module Bricks (
     output [6:0] sevenDisplay010, 
     output [6:0] sevenDisplay001,
     output [7:0] dot_row, 
-    output [7:0] dot_col
+    output [7:0] dot_col,
+    output VGA_hSync,
+    output VGA_vSync,
+    output [3:0] VGA_R,
+    output [3:0] VGA_G,
+    output [3:0] VGA_B
 );
 wire [9:0] score; // should be limited to 0~999
 wire [3:0] score100;
@@ -52,5 +57,16 @@ SevenDisplay SD2(
 SevenDisplay SD3(
     .in(score001), 
     .out(sevenDisplay001)
+);
+
+VGAdisplay VGA(
+    .clock(clock),
+    .reset(reset),
+    // .data(data),     reserve for someone do the data part
+    .hSync(VGA_hSync),
+    .vSync(VGA_vSync),
+    .r(VGA_R),
+    .g(VGA_G),
+    .b(VGA_B)
 );
 endmodule 
