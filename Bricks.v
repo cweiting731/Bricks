@@ -20,13 +20,17 @@ wire [3:0] score010;
 wire [3:0] score001;
 wire clock100HZ;
 wire clock10000HZ;
+wire clock2HZ;
 wire [3:0] control;
+wire [191:0] data;
+wire [307199:0] AmplifiedData;
 
 FrequencyDivider FD(
     .clock(clock), 
     .reset(reset), 
     .dividerClock10000HZ(clock10000HZ), 
-    .dividerClock100HZ(clock100HZ)
+    .dividerClock100HZ(clock100HZ), 
+    .dividerClock2HZ(clock2HZ)
 );
 
 CheckKeyPad CKP(
@@ -59,10 +63,18 @@ SevenDisplay SD3(
     .out(sevenDisplay001)
 );
 
+Dot_Matrix DM(
+    .clock(clock10000HZ), 
+    .reset(reset), 
+    .control(control), 
+    .dot_row(dot_row), 
+    .dot_col(dot_col)
+);
+
 VGAdisplay VGA(
     .clock(clock),
     .reset(reset),
-    // .data(data),     reserve for someone do the data part
+    .data(AmplifiedData),     // reserve for someone do the data part
     .hSync(VGA_hSync),
     .vSync(VGA_vSync),
     .r(VGA_R),
