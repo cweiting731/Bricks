@@ -20,3 +20,4 @@ Digital System Lab Project
 * ⚠️ **計算的時候務必參照圖片的 row 跟 column 的排序** ⚠️
 
 ![download](https://github.com/user-attachments/assets/0c18f561-124a-4683-ae46-1bbdc985c48c)
+![467477878_8250941465007593_3103476289153712682_n](https://github.com/user-attachments/assets/c2c5f041-8854-48ab-8369-da0a257d7788)
