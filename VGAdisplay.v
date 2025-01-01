@@ -5,7 +5,7 @@
 
     input clock,                the 25MHz clock
     input reset,                reset signal, active low
-    input [307199:0] data,      a 480*640 binary data flatted from 2d
+    input [191:0] data,      a 16*12 binary data flatted from 2d
     output hSync,               Hor Sync
     output vSync,               Ver Sync
     output reg [3:0] r,         red component
@@ -122,13 +122,45 @@ assign active_flag = (h_count >= (H_SYNC_PULSE + H_BACK_PORCH)) &&
 
 
 ////////////////////////////////////////////////////////////
-// data extend
+// data extend (using nearest neighbor interpolation)
 ////////////////////////////////////////////////////////////
 
 //  [307199:0] extend;
 reg [38399:0] extend[0:7];
 
 // TODO: transform data(12*16) to extend(640*480)
+always @(posedge clock or negedge reset)
+begin
+    if(!reset)
+    begin
+        integer extendPartition;
+        for(extendPartition=0; extendPartition<=7; extendPartition=extendPartition+1)
+        begin
+            extend[extendPartition] <= 38400'b0;
+        end
+    end
+    else
+    begin
+        integer extend;
+        for(extend=307199; extend<=0; extend=extend-1)
+        begin
+            extend[(307199-extend)%38400][extend%38400] <=
+            data[((extend%H_ACTIVE_TIME)*640)/16+(((extend/H_ACTIVE_TIME)*480)/12)*16];
+            // srcX = ((extend%H_ACTIVE_TIME)*640)/16
+            // srcY = ((extend/H_ACTIVE_TIME)*480)/12
+        end
+    end
+end
+
+// python code
+
+// def flatNearestNeighborInterpolation(array : list, srcWidth, srcHeight, newWidth, newHeight):
+//     extend = []
+//     for i in range(newWidth*newHeight):
+//         srcX = (i%newWidth)*(srcWidth/newWidth)
+//         srcY = (i//newWidth)*(srcHeight/newHeight)
+//         extend.append(array[int(srcX)+int(srcY)*srcWidth])
+//     return extend
 
 ////////////////////////////////////////////////////////////
 
@@ -148,70 +180,14 @@ begin
         RGBcomponent[7:4]  <= 4'b0000;
         RGBcomponent[3:0]  <= 4'b0000;
         pixelCount <= 19'd0;
-        extendCount <= 16'd0;
-        state <= 3'd0;
     end
     else if(active_flag)
     begin
         // assert(pixelCount >= 0 && pixelCount <= 307199)
         pixelCount <= pixelCount + 19'd1;
-        extendCount <= extendCount + 16'd1;
-        if(extendCount == 16'd38399)
-        begin
-            extendCount <= 16'd0;
-            state <= state + 3'd1;
-        end
-        // color currently all white
-        case (state)
-            3'd0:
-            begin
-                RGBcomponent[11:8] <= {4{extend[0][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[0][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[0][pixelCount]}};
-            end
-            3'd1:
-            begin
-                RGBcomponent[11:8] <= {4{extend[1][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[1][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[1][pixelCount]}};
-            end
-            3'd2:
-            begin
-                RGBcomponent[11:8] <= {4{extend[2][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[2][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[2][pixelCount]}};
-            end
-            3'd3:
-            begin
-                RGBcomponent[11:8] <= {4{extend[3][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[3][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[3][pixelCount]}};
-            end
-            3'd4:
-            begin
-                RGBcomponent[11:8] <= {4{extend[4][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[4][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[4][pixelCount]}};
-            end
-            3'd5:
-            begin
-                RGBcomponent[11:8] <= {4{extend[5][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[5][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[5][pixelCount]}};
-            end
-            3'd6:
-            begin
-                RGBcomponent[11:8] <= {4{extend[6][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[6][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[6][pixelCount]}};
-            end
-            3'd7:
-            begin
-                RGBcomponent[11:8] <= {4{extend[7][pixelCount]}};
-                RGBcomponent[7:4]  <= {4{extend[7][pixelCount]}};
-                RGBcomponent[3:0]  <= {4{extend[7][pixelCount]}};
-            end
-        endcase
+        RGBcomponent[11:8] <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
+        RGBcomponent[7:4]  <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
+        RGBcomponent[3:0]  <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
     end
     else
     begin
