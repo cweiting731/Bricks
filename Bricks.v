@@ -22,8 +22,12 @@ wire clock100HZ;
 wire clock10000HZ;
 wire clock2HZ;
 wire [3:0] control;
+
+wire [15:0] plate_row;
+wire [3:0] ball_rowIndex;
+wire [3:0] ball_colIndex;
+wire [95:0] bricks;
 wire [191:0] data;
-wire [307199:0] AmplifiedData;
 
 FrequencyDivider FD(
     .clock(clock), 
@@ -71,10 +75,18 @@ Dot_Matrix DM(
     .dot_col(dot_col)
 );
 
+CombineToMatrix CTM(
+    .plate_row(plate_row), 
+    .ball_rowIndex(ball_rowIndex), 
+    .ball_colIndex(ball_colIndex), 
+    .bricks(bricks), 
+    .data(data)
+);
+
 VGAdisplay VGA(
     .clock(clock),
     .reset(reset),
-    .data(AmplifiedData),     // reserve for someone do the data part
+    .data(data),     // reserve for someone do the data part
     .hSync(VGA_hSync),
     .vSync(VGA_vSync),
     .r(VGA_R),
