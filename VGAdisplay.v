@@ -15,7 +15,7 @@
 module VGAdisplay (
     input clock,
     input reset,
-    input [307199:0] data,
+    input [191:0] data,
     output hSync,
     output vSync,
     output reg [3:0] r,
@@ -122,16 +122,107 @@ assign active_flag = (h_count >= (H_SYNC_PULSE + H_BACK_PORCH)) &&
 
 
 ////////////////////////////////////////////////////////////
-// RGBgenerator
+// data extend
 ////////////////////////////////////////////////////////////
 
-wire [11:0] RGBcomponent;
-RGBgenerator u1_RGBgenerator(
-    .clock(clock),
-    .reset(reset),
-    .data(data),
-    .component(RGBcomponent)
-);
+//  [307199:0] extend;
+reg [38399:0] extend[0:7];
+
+// TODO: transform data(12*16) to extend(640*480)
+
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// RBGcomponent assign
+////////////////////////////////////////////////////////////
+
+reg [11:0] RGBcomponent;
+reg [18:0] pixelCount;
+reg [15:0] extendCount;
+reg [2:0] state;
+always @(posedge clk_25MHz or negedge reset)
+begin
+    if(!reset) 
+    begin
+        RGBcomponent[11:8] <= 4'b0000;
+        RGBcomponent[7:4]  <= 4'b0000;
+        RGBcomponent[3:0]  <= 4'b0000;
+        pixelCount <= 19'd0;
+        extendCount <= 16'd0;
+        state <= 3'd0;
+    end
+    else if(active_flag)
+    begin
+        // assert(pixelCount >= 0 && pixelCount <= 307199)
+        pixelCount <= pixelCount + 19'd1;
+        extendCount <= extendCount + 16'd1;
+        if(extendCount == 16'd38399)
+        begin
+            extendCount <= 16'd0;
+            state <= state + 3'd1;
+        end
+        // color currently all white
+        case (state)
+            3'd0:
+            begin
+                RGBcomponent[11:8] <= {4{extend[0][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[0][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[0][pixelCount]}};
+            end
+            3'd1:
+            begin
+                RGBcomponent[11:8] <= {4{extend[1][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[1][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[1][pixelCount]}};
+            end
+            3'd2:
+            begin
+                RGBcomponent[11:8] <= {4{extend[2][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[2][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[2][pixelCount]}};
+            end
+            3'd3:
+            begin
+                RGBcomponent[11:8] <= {4{extend[3][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[3][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[3][pixelCount]}};
+            end
+            3'd4:
+            begin
+                RGBcomponent[11:8] <= {4{extend[4][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[4][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[4][pixelCount]}};
+            end
+            3'd5:
+            begin
+                RGBcomponent[11:8] <= {4{extend[5][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[5][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[5][pixelCount]}};
+            end
+            3'd6:
+            begin
+                RGBcomponent[11:8] <= {4{extend[6][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[6][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[6][pixelCount]}};
+            end
+            3'd7:
+            begin
+                RGBcomponent[11:8] <= {4{extend[7][pixelCount]}};
+                RGBcomponent[7:4]  <= {4{extend[7][pixelCount]}};
+                RGBcomponent[3:0]  <= {4{extend[7][pixelCount]}};
+            end
+        endcase
+    end
+    else
+    begin
+        RGBcomponent[11:8] <= 4'b0000;
+        RGBcomponent[7:4]  <= 4'b0000;
+        RGBcomponent[3:0]  <= 4'b0000;
+        pixelCount <= 19'd0;
+        extendCount <= 16'd0;
+        state <= 3'd0;
+    end
+end
 
 ////////////////////////////////////////////////////////////
 
