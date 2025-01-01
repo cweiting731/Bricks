@@ -1,8 +1,6 @@
 /*
     this VGAdisplay module display once per pixel time(25MHz)
-    dependency: RGBgenerator
-        work with a data generator that generates rgb component per pixel time(25MHz)
-
+    
     input clock,                the 25MHz clock
     input reset,                reset signal, active low
     input [191:0] data,      a 16*12 binary data flatted from 2d
