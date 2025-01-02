@@ -118,58 +118,12 @@ assign active_flag = (h_count >= (H_SYNC_PULSE + H_BACK_PORCH)) &&
                      (v_count >= (V_SYNC_PAUSE + V_BACK_PORCH)) &&
                      (v_count < (V_SYNC_PAUSE + V_BACK_PORCH + V_ACTIVE_TIME));
 
-
-////////////////////////////////////////////////////////////
-// data extend (using nearest neighbor interpolation)
-////////////////////////////////////////////////////////////
-
-//  [307199:0] extend;
-reg [38399:0] extend[0:7];
-
-// TODO: transform data(12*16) to extend(640*480)
-always @(posedge clock or negedge reset)
-begin
-    if(!reset)
-    begin
-        integer extendPartition;
-        for(extendPartition=0; extendPartition<=7; extendPartition=extendPartition+1)
-        begin
-            extend[extendPartition] <= 38400'b0;
-        end
-    end
-    else
-    begin
-        integer extend;
-        for(extend=307199; extend<=0; extend=extend-1)
-        begin
-            extend[(307199-extend)%38400][extend%38400] <=
-            data[((extend%H_ACTIVE_TIME)*640)/16+(((extend/H_ACTIVE_TIME)*480)/12)*16];
-            // srcX = ((extend%H_ACTIVE_TIME)*640)/16
-            // srcY = ((extend/H_ACTIVE_TIME)*480)/12
-        end
-    end
-end
-
-// python code
-
-// def flatNearestNeighborInterpolation(array : list, srcWidth, srcHeight, newWidth, newHeight):
-//     extend = []
-//     for i in range(newWidth*newHeight):
-//         srcX = (i%newWidth)*(srcWidth/newWidth)
-//         srcY = (i//newWidth)*(srcHeight/newHeight)
-//         extend.append(array[int(srcX)+int(srcY)*srcWidth])
-//     return extend
-
-////////////////////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////
 // RBGcomponent assign
 ////////////////////////////////////////////////////////////
 
-reg [11:0] RGBcomponent;
+reg [11:0] RGBcomponent;    // R=[11:8], G=[7:4], B=[3:0]
 reg [18:0] pixelCount;
-reg [15:0] extendCount;
-reg [2:0] state;
 always @(posedge clk_25MHz or negedge reset)
 begin
     if(!reset) 
@@ -182,10 +136,12 @@ begin
     else if(active_flag)
     begin
         // assert(pixelCount >= 0 && pixelCount <= 307199)
+        // using nearest neighbor interpolation(see :188)
         pixelCount <= pixelCount + 19'd1;
-        RGBcomponent[11:8] <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
-        RGBcomponent[7:4]  <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
-        RGBcomponent[3:0]  <= {4{extend[pixelCount/38400][(307199-pixelCount)%38400]}};
+        RGBcomponent[11:8] <= {4{data[(((307199-pixelCount)%H_ACTIVE_TIME)*640)/16+((((307199-pixelCount)/H_ACTIVE_TIME)*480)/12)*16]}};
+        RGBcomponent[7:4]  <= {4{data[(((307199-pixelCount)%H_ACTIVE_TIME)*640)/16+((((307199-pixelCount)/H_ACTIVE_TIME)*480)/12)*16]}};
+        RGBcomponent[3:0]  <= {4{data[(((307199-pixelCount)%H_ACTIVE_TIME)*640)/16+((((307199-pixelCount)/H_ACTIVE_TIME)*480)/12)*16]}};
+        // bit index from MST to LST is (307199-pixelCount)
     end
     else
     begin
@@ -193,8 +149,6 @@ begin
         RGBcomponent[7:4]  <= 4'b0000;
         RGBcomponent[3:0]  <= 4'b0000;
         pixelCount <= 19'd0;
-        extendCount <= 16'd0;
-        state <= 3'd0;
     end
 end
 
@@ -229,3 +183,48 @@ end
 ////////////////////////////////////////////////////////////
 
 endmodule
+
+/*
+////////////////////////////////////////////////////////////
+// data extend (using nearest neighbor interpolation)
+////////////////////////////////////////////////////////////
+    
+//  [307199:0] extend;
+reg [38399:0] extend[0:7];
+
+// TODO: transform data(12*16) to extend(640*480)
+always @(posedge clk_2Hz or negedge reset)
+begin
+    if(!reset)
+    begin:loopInit
+        integer extendPartition;
+        for(extendPartition=0; extendPartition<=7; extendPartition=extendPartition+1)
+        begin
+            extend[extendPartition] <= 38400'b0;
+        end
+    end
+    else
+    begin:loopExtend
+        integer extendIndex;
+        for(extendIndex=307199; extendIndex<=0; extendIndex=extendIndex-1)
+        begin
+            extend[(307199-extendIndex)/38400][extendIndex%38400] <=
+            data[((extendIndex%H_ACTIVE_TIME)*640)/16+(((extendIndex/H_ACTIVE_TIME)*480)/12)*16];
+            // srcX = ((extend%H_ACTIVE_TIME)*640)/16
+            // srcY = ((extend/H_ACTIVE_TIME)*480)/12
+        end
+    end
+end
+
+// python code
+
+// def flatNearestNeighborInterpolation(array : list, srcWidth, srcHeight, newWidth, newHeight):
+//     extend = []
+//     for i in range(newWidth*newHeight):
+//         srcX = (i%newWidth)*(srcWidth/newWidth)
+//         srcY = (i//newWidth)*(srcHeight/newHeight)
+//         extend.append(array[int(srcX)+int(srcY)*srcWidth])
+//     return extend
+
+////////////////////////////////////////////////////////////
+*/
