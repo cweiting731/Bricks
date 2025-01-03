@@ -42,6 +42,33 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 			Ball_rowIndex = 4'd9;
 			Ball_colIndex = 4'd9;
 			Ball_direction = UP_RIGHT;
+		end
+		else begin
+			if(ifMove) begin
+				case(Ball_direction)
+					UP_RIGHT : begin
+						Ball_rowIndex <= Ball_rowIndex - 4'd1;
+						Ball_colIndex <= Ball_colIndex - 4'd1;
+					end
+					UP_LEFT : begin
+						Ball_rowIndex <= Ball_rowIndex - 4'd1;
+						Ball_colIndex <= Ball_colIndex + 4'd1;
+					end
+					DOWN_RIGHT : begin
+						Ball_rowIndex <= Ball_rowIndex + 4'd1;
+						Ball_colIndex <= Ball_colIndex - 4'd1;
+					end
+					default : begin
+						Ball_rowIndex <= Ball_rowIndex + 4'd1;
+						Ball_colIndex <= Ball_colIndex + 4'd1;
+					end
+				endcase
+			end
+		end
+	end
+	
+	always@(posedge clock, negedge reset) begin
+		if(!reset) begin
 			ifMove = 1;
 		end
 		else begin	
@@ -129,28 +156,6 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 					else begin
 					   ifMove <= 1;
 					end
-				end
-			endcase
-		end
-	end
-	always@(posedge clock, negedge reset) begin
-		if(ifMove) begin
-			case(Ball_direction)
-				UP_RIGHT : begin
-					Ball_rowIndex <= Ball_rowIndex - 4'd1;
-					Ball_colIndex <= Ball_colIndex - 4'd1;
-				end
-				UP_LEFT : begin
-					Ball_rowIndex <= Ball_rowIndex - 4'd1;
-					Ball_colIndex <= Ball_colIndex + 4'd1;
-				end
-				DOWN_RIGHT : begin
-					Ball_rowIndex <= Ball_rowIndex + 4'd1;
-					Ball_colIndex <= Ball_colIndex - 4'd1;
-				end
-				default : begin
-					Ball_rowIndex <= Ball_rowIndex + 4'd1;
-					Ball_colIndex <= Ball_colIndex + 4'd1;
 				end
 			endcase
 		end
