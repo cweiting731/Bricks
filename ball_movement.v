@@ -37,7 +37,7 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	parameter DOWN_RIGHT = 2'b10;
 	parameter DOWN_LEFT = 2'b11;
 	
-	always@(posedge clock, negedge reset) begin
+	always@(posedge clock or negedge reset) begin
 		if(!reset) begin
 			Ball_rowIndex <= 4'd9;
 			Ball_colIndex <= 4'd9;
@@ -67,7 +67,7 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 		end
 	end
 	
-	always@(posedge clock, negedge reset) begin
+	always@(posedge clock or negedge reset) begin
 		if(!reset) begin
 			ifMove <= 1;
 		end
