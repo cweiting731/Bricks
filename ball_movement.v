@@ -39,9 +39,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	
 	always@(posedge clock, negedge reset) begin
 		if(!reset) begin
-			Ball_rowIndex = 4'd9;
-			Ball_colIndex = 4'd9;
-			Ball_direction = UP_RIGHT;
+			Ball_rowIndex <= 4'd9;
+			Ball_colIndex <= 4'd9;
+			Ball_direction <= UP_RIGHT;
 		end
 		else begin
 			if(ifMove) begin
@@ -69,7 +69,7 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	
 	always@(posedge clock, negedge reset) begin
 		if(!reset) begin
-			ifMove = 1;
+			ifMove <= 1;
 		end
 		else begin	
 			case(Ball_direction)
