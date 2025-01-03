@@ -1,4 +1,4 @@
-module Dot_Matrix(
+module DotMatrix(
 	input clock, // 10000HZ
     input [3:0] control,
 	input reset,

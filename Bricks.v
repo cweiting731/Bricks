@@ -67,7 +67,7 @@ SevenDisplay SD3(
     .out(sevenDisplay001)
 );
 
-Dot_Matrix DM(
+DotMatrix DM(
     .clock(clock10000HZ), 
     .reset(reset), 
     .control(control), 
