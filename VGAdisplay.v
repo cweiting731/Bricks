@@ -136,14 +136,14 @@ begin
     else if(active_flag)
     begin
         // assert(pixelCount >= 0 && pixelCount <= 307199)
-		  if(pixelCount == 19'd307199)
-		  begin
-		      pixelCount <= 19'd0;
-		  end
-		  else
-		  begin
-		      pixelCount <= pixelCount + 19'd1;
-		  end
+        if(pixelCount == 19'd307199)
+        begin
+            pixelCount <= 19'd0;
+        end
+        else
+        begin
+            pixelCount <= pixelCount + 19'd1;
+        end
         // using nearest neighbor interpolation(see :188)
         RGBcomponent[11:8] <= {4{data[(((307199-pixelCount)%H_ACTIVE_TIME)*16)/640+((((307199-pixelCount)/H_ACTIVE_TIME)*12)/480)*16]}};
         RGBcomponent[7:4]  <= {4{data[(((307199-pixelCount)%H_ACTIVE_TIME)*16)/640+((((307199-pixelCount)/H_ACTIVE_TIME)*12)/480)*16]}};
@@ -155,7 +155,6 @@ begin
         RGBcomponent[11:8] <= 4'b0000;
         RGBcomponent[7:4]  <= 4'b0000;
         RGBcomponent[3:0]  <= 4'b0000;
-//        pixelCount <= 19'd0;
     end
 end
 
