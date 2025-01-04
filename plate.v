@@ -16,7 +16,7 @@ module plate (
         data_out = PLATE_INITIAL;
     end
 
-    /
+    
     always @(posedge clock or negedge reset) begin
         if (!reset) begin
             plate_position <= PLATE_INITIAL;
