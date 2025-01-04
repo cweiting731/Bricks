@@ -61,81 +61,122 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 					Ball_colIndex <= Ball_colIndex + 4'd1;
 				end
 			endcase
-		end
-	end
-	
-	always@(posedge clock) begin
-		case(Ball_direction)
-			UP_RIGHT : begin
-				if(upward_collision && !rightward_collision) begin
-				   Ball_direction <= DOWN_RIGHT;
+			
+			case(Ball_direction)
+			
+				UP_RIGHT : begin
+					if(upward_collision && !rightward_collision) begin
+						if(dr_collision) begin
+							Ball_direction <= DOWN_LEFT;
+						end
+						else begin
+							Ball_direction <= DOWN_RIGHT;
+						end
+					end
+					else if(!upward_collision && rightward_collision) begin
+						if(ul_collision) begin
+							Ball_direction <= DOWN_LEFT;
+						end
+						else begin
+							Ball_direction <= UP_LEFT;
+						end
+					end
+					else if(upward_collision && rightward_collision) begin
+						Ball_direction <= DOWN_LEFT;					
+					end
+					else if(ur_collision) begin
+						Ball_direction <= DOWN_LEFT;
+					end
+					else begin
+						Ball_direction <= Ball_direction;
+					end
 				end
-				else if(!upward_collision && rightward_collision) begin
-				   Ball_direction <= UP_LEFT;
+				
+				UP_LEFT: begin
+					if(upward_collision && !leftward_collision) begin
+						if(dl_collision) begin
+							Ball_direction <= DOWN_RIGHT;
+						end
+						else begin
+							Ball_direction <= DOWN_LEFT;
+						end
+					end
+					else if(!upward_collision && leftward_collision) begin
+						if(ur_collision) begin
+							Ball_direction <= DOWN_RIGHT;
+						end
+						else begin
+							Ball_direction <= UP_RIGHT;
+						end
+					end
+					else if(upward_collision && leftward_collision) begin
+						Ball_direction <= DOWN_RIGHT;					
+					end
+					else if(ul_collision) begin
+						Ball_direction <= DOWN_RIGHT;
+					end
+					else begin
+						Ball_direction <= Ball_direction;
+					end
 				end
-				else if(upward_collision && rightward_collision) begin
-				   Ball_direction <= DOWN_LEFT;					
+				
+				DOWN_RIGHT : begin
+					if(downward_collision && !rightward_collision) begin
+						if(ur_collision) begin
+							Ball_direction <= DOWN_LEFT;
+						end
+						else begin
+							Ball_direction <= UP_RIGHT;
+						end
+					end
+					else if(!downward_collision && rightward_collision) begin
+						if(dl_collision) begin
+							Ball_direction <= UP_LEFT;
+						end
+						else begin
+							Ball_direction <= DOWN_LEFT;
+						end
+					end
+					else if(downward_collision && rightward_collision) begin
+						Ball_direction <= UP_LEFT;
+					end
+					else if(dr_collision) begin
+						Ball_direction <= UP_LEFT;
+					end
+					else begin
+						Ball_direction <= Ball_direction;
+					end
 				end
-				else if(ur_collision) begin
-				   Ball_direction <= DOWN_LEFT;
-				end
-				else begin
-					Ball_direction <= Ball_direction;
-				end
-			end
-			UP_LEFT: begin
-				if(upward_collision && !leftward_collision) begin
-				   Ball_direction <= DOWN_LEFT;
-				end
-				else if(!upward_collision && leftward_collision) begin
-				   Ball_direction <= UP_RIGHT;
-				end
-				else if(upward_collision && leftward_collision) begin
-				   Ball_direction <= DOWN_RIGHT;					
-				end
-				else if(ul_collision) begin
-				   Ball_direction <= DOWN_RIGHT;
-				end
-				else begin
-					Ball_direction <= Ball_direction;
-				end
-			end
-			DOWN_RIGHT : begin
-				if(downward_collision && !rightward_collision) begin
-					Ball_direction <= UP_RIGHT;
-				end
-				else if(!downward_collision && rightward_collision) begin
-				   Ball_direction <= DOWN_LEFT;
-				end
-				else if(downward_collision && rightward_collision) begin
-				   Ball_direction <= UP_LEFT;
-				end
-				else if(dr_collision) begin
-				   Ball_direction <= UP_LEFT;
-				end
-				else begin
-					Ball_direction <= Ball_direction;
-				end
-			end
-			default : begin
-				if(downward_collision && !leftward_collision) begin
-				   Ball_direction <= UP_LEFT;
-				end
-				else if(!downward_collision && leftward_collision) begin
-				   Ball_direction <= DOWN_RIGHT;
-				end
-				else if(downward_collision && leftward_collision) begin
-				   Ball_direction <= UP_RIGHT;
-				end
-				else if(dl_collision) begin
-					  Ball_direction <= UP_RIGHT;
-				end
-				else begin
-					Ball_direction <= Ball_direction;
+				
+				default : begin
+					if(downward_collision && !leftward_collision) begin
+						if(ul_collision) begin
+							Ball_direction <= UP_RIGHT;
+						end
+						else begin
+							Ball_direction <= UP_LEFT;
+						end
+					end
+					else if(!downward_collision && leftward_collision) begin
+						if(ur_collision) begin
+							Ball_direction <= UP_RIGHT;
+						end
+						else begin
+							Ball_direction <= DOWN_RIGHT;
+						end
+					end
+					else if(downward_collision && leftward_collision) begin
+						Ball_direction <= UP_RIGHT;
+					end
+					else if(dl_collision) begin
+						  Ball_direction <= UP_RIGHT;
+					end
+					else begin
+						Ball_direction <= Ball_direction;
+					end
 				end
 			endcase
 		end
 	end
 	
 endmodule
-			
