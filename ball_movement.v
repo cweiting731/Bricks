@@ -6,10 +6,10 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	output reg [1:0]   Ball_direction;
 	
 	function isSomethingThere;
-		input [3:0]   row;
-		input [3:0]   col;
-		input [191:0] data;
-		reg   [7:0]   index;
+		input signed [3:0]   row;
+		input signed [3:0]   col;
+		input        [191:0] data;
+		reg          [7:0]   index;
 		
 		begin
 			if(row < 0 || row >= 12 || col < 0 || col >= 16) begin
@@ -22,14 +22,14 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 		end
 	endfunction
 
-	wire upward_collision = isSomethingThere(Ball_rowIndex - 1, Ball_colIndex, data);
-	wire rightward_collision = isSomethingThere(Ball_rowIndex, Ball_colIndex - 1, data);
-	wire downward_collision = isSomethingThere(Ball_rowIndex + 1, Ball_colIndex, data);
-	wire leftward_collision = isSomethingThere(Ball_rowIndex, Ball_colIndex + 1, data);
-	wire ur_collision = isSomethingThere(Ball_rowIndex - 1, Ball_colIndex - 1, data);
-	wire ul_collision = isSomethingThere(Ball_rowIndex - 1, Ball_colIndex + 1, data);
-	wire dr_collision = isSomethingThere(Ball_rowIndex + 1, Ball_colIndex - 1, data);
-	wire dl_collision = isSomethingThere(Ball_rowIndex + 1, Ball_colIndex + 1, data);
+	wire upward_collision = isSomethingThere($signed(Ball_rowIndex) - 1, $signed(Ball_colIndex), data);
+	wire rightward_collision = isSomethingThere($signed(Ball_rowIndex), $signed(Ball_colIndex) - 1, data);
+	wire downward_collision = isSomethingThere($signed(Ball_rowIndex) + 1, $signed(Ball_colIndex), data);
+	wire leftward_collision = isSomethingThere($signed(Ball_rowIndex), $signed(Ball_colIndex) + 1, data);
+	wire ur_collision = isSomethingThere($signed(Ball_rowIndex) - 1, $signed(Ball_colIndex) - 1, data);
+	wire ul_collision = isSomethingThere($signed(Ball_rowIndex) - 1, $signed(Ball_colIndex) + 1, data);
+	wire dr_collision = isSomethingThere($signed(Ball_rowIndex) + 1, $signed(Ball_colIndex) - 1, data);
+	wire dl_collision = isSomethingThere($signed(Ball_rowIndex) + 1, $signed(Ball_colIndex) + 1, data);
 	
 	parameter UP_RIGHT = 2'b00;
 	parameter UP_LEFT = 2'b01;
