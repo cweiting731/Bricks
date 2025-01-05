@@ -26,6 +26,7 @@ wire [3:0] control;
 wire [15:0] plate_row;
 wire [3:0] ball_rowIndex;
 wire [3:0] ball_colIndex;
+wire [3:0] ball_direction;
 wire [95:0] bricks;
 wire [191:0] data;
 
@@ -43,6 +44,33 @@ CheckKeyPad CKP(
     .keyPad_Col(keyPad_col), 
     .keyPad_Row(keyPad_row), 
     .control(control)
+);
+
+plate P(
+    .data(plate_row),
+    .control(control), 
+    .reset(reset), 
+    .clock(clock2HZ), 
+    .data_out(plate_row)
+);
+
+ball_movement BM(
+    .data(data),
+    .reset(reset), 
+    .clock(clock2HZ), 
+    .Ball_rowIndex(ball_rowIndex),
+    .Ball_colIndex(ball_colIndex),
+    .Ball_direction(ball_direction)
+);
+
+Score S(
+    .Ball_rowIndex(ball_rowIndex), 
+    .Ball_colIndex(ball_colIndex), 
+    .Ball_direction(ball_direction),
+    .reset(reset), 
+    .clock(clock2HZ),
+    .Bricks(bricks), 
+    .score(score) 
 );
 
 ScoreProcessor SP(
