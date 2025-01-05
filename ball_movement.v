@@ -5,7 +5,6 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	output reg [3:0]   Ball_rowIndex, Ball_colIndex;
 	output reg [1:0]   Ball_direction;
 
-
 	function isSomethingThere;
 		input [3:0]   row;
 		input [3:0]   col;
@@ -38,9 +37,10 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	parameter DOWN_RIGHT = 2'b10;
 	parameter DOWN_LEFT = 2'b11;
 	
-	reg [1:0] next_direction;
 	reg [3:0] next_rowIndex, next_colIndex;
+	reg [1:0] next_direction;
 
+	//sequencial part
 	always@(posedge clock or negedge reset) begin
 		if(!reset) begin
 			Ball_rowIndex <= 4'd9;
@@ -54,11 +54,13 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 		end
 	end
 
+	//next position and next direction logic
 	always@(*) begin
 		next_rowIndex = Ball_rowIndex;
 		next_colIndex = Ball_colIndex;
 		next_direction = Ball_direction;
 
+		//decide ball's next direction
 		case(Ball_direction)
 			UP_RIGHT : begin
 				if(upward_collision && !rightward_collision) begin
@@ -161,6 +163,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 			end
 		endcase
 		
+
+
+		//update ball's position according to next_direction
 		case(next_direction)
 			UP_RIGHT : begin
 				next_rowIndex = Ball_rowIndex - 4'd1;
