@@ -14,8 +14,8 @@ module Score (
 
     assign clock2HZ = clock_divider[24]; // 使用最高位實現分頻 (50 MHz / 2^25 = 2 Hz)
 
-    always @(posedge clock or posedge reset) begin
-        if (reset)
+    always @(posedge clock or negedge reset) begin
+        if (!reset)
             clock_divider <= 0; // 分頻器在重置時歸零
         else
             clock_divider <= clock_divider + 1;
@@ -23,12 +23,12 @@ module Score (
 
     // 行列轉換成一維索引，考慮磚塊僅占上面 7 行，且每個磚塊為 1x2
     wire [6:0] brick_index; // 磚塊索引擴展為 7 位元以支援 7x16
-    assign brick_index = (Ball_rowIndex +1) * 8 + (Ball_colIndex >> 1); // 每行有 8 個磚塊
+    assign brick_index = Ball_rowIndex * 8 + (Ball_colIndex >> 1); // 每行有 8 個磚塊
 
     // 初始化與功能實現
     always @(posedge clock2HZ or negedge reset) begin
         if (!reset) begin
-            Bricks <= 56'hFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
+            Bricks <= 56'hFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
             score <= 10'd0;                                                // 分數重置為 0
         end else begin
             // 碰撞處理
@@ -41,3 +41,4 @@ module Score (
     end
 
 endmodule
+
