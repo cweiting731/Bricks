@@ -58,7 +58,6 @@ ball_movement BM(
     .data(data),
     .reset(reset), 
     .clock(clock2HZ), 
-    .control(control), 
     .Ball_rowIndex(ball_rowIndex),
     .Ball_colIndex(ball_colIndex),
     .Ball_direction(ball_direction)
@@ -69,9 +68,9 @@ Score S(
     .Ball_colIndex(ball_colIndex), 
     .Ball_direction(ball_direction),
     .reset(reset), 
-    .clock(clock2HZ)
+    .clock(clock2HZ),
     .Bricks(bricks), 
-    .score(score), 
+    .score(score) 
 );
 
 ScoreProcessor SP(
