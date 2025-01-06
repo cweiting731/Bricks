@@ -29,6 +29,7 @@ wire [3:0] ball_colIndex;
 wire [3:0] ball_direction;
 wire [55:0] bricks;
 wire [191:0] data;
+wire [191:0] game_data;
 
 FrequencyDivider FD(
     .clock(clock), 
@@ -55,7 +56,7 @@ plate P(
 );
 
 ball_movement BM(
-    .data(data),
+    .data(game_data),
     .reset(reset), 
     .clock(clock2HZ), 
     .Ball_rowIndex(ball_rowIndex),
@@ -108,7 +109,8 @@ CombineToMatrix CTM(
     .ball_rowIndex(ball_rowIndex), 
     .ball_colIndex(ball_colIndex), 
     .bricks(bricks), 
-    .data(data)
+    .data(data),
+    .game_data(game_data)
 );
 
 VGAdisplay VGA(
