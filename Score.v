@@ -17,7 +17,7 @@ module Score (
     always @(posedge clock or negedge reset) begin
         if (!reset) begin
             Bricks <= 64'hFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
-				Bricks[71:56] = 8'b0;
+				Bricks[71:56] = 16'b0;
             score <= 10'd0; 				// 分數重置為 0
 				IsGameOver = 1'b0;
         end else begin
@@ -57,10 +57,10 @@ module Score (
 						 score <= score + 2; // 分數加 1
 					end else if (Bricks[brick_index] == 1'b1 && Ball_rowIndex != 0) begin
 						 Bricks[brick_index] <= 1'b0;
-						 score <= score + 3; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+16] == 1'b1) begin
 						 Bricks[brick_index+16] <= 1'b0;
-						 score <= score + 4; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_colIndex != 0) begin //right
 						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
 						 score <= score + 5; // 分數加 1
@@ -69,13 +69,13 @@ module Score (
 						 score <= score + 6; // 分數加 1
 					end else if (Bricks[brick_index-1] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin //right
 						 Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
-						 score <= score + 7; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+1] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15 && Ball_rowIndex != 0) begin //right
 						 Bricks[brick_index+1] <= 1'b0; // 刪除自身磚塊
-						 score <= score + 8; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+15] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin //right
 						 Bricks[brick_index+15] <= 1'b0; // 刪除自身磚塊
-						 score <= score + 9; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+17] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin //right
 						 Bricks[brick_index+17] <= 1'b0; // 刪除自身磚塊
 						 score <= score + 1; // 分數加 1
