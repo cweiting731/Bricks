@@ -4,7 +4,7 @@ module Score (
     input [1:0] Ball_direction, // 球的方向 (由其他模組控制)
     input clock,                // 時鐘訊號 (假設為原始頻率) // 2HZ
     input reset,                // 重置訊號
-    output reg [63:0] Bricks,  // 磚塊狀態 (僅占上面 7 行，每行 16 個磚塊的一半)
+    output reg [71:0] Bricks,  // 磚塊狀態 (僅占上面 7 行，每行 16 個磚塊的一半)
     output reg [9:0] score      // 分數
 );
 
@@ -16,7 +16,7 @@ module Score (
     always @(posedge clock or negedge reset) begin
         if (!reset) begin
             Bricks <= 64'hFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
-				Bricks[63:56] = 8'b0;
+				Bricks[71:56] = 8'b0;
             score <= 10'd0;                                                // 分數重置為 0
         end else begin
             // 碰撞處理
