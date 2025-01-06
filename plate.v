@@ -28,10 +28,14 @@ module plate (
                 4'b0001: begin
                     if (plate_position[0] == 1'b0) 
                         plate_position <= plate_position >> 1;
+                    else begin
+                    end 
                 end
                 4'b0100: begin
                     if (plate_position[15] == 1'b0) 
                         plate_position <= plate_position << 1;
+                    else begin
+                    end 
                 end
                 4'b0011: begin
                     if (plate_position[1:0] == 2'b00) begin
@@ -39,6 +43,8 @@ module plate (
                     end else if (plate_position[0] == 1'b0) begin
                         plate_position <= plate_position >> 1;
                     end
+                    else begin
+                    end 
                 end
                 4'b0110: begin
                     if (plate_position[15:14] == 2'b00) begin 
@@ -46,6 +52,8 @@ module plate (
                     end else if (plate_position[15] == 1'b0)begin
                         plate_position <= plate_position << 1;
                     end
+                    else begin
+                    end 
                 end
                 default: begin
                     plate_position <= plate_position;
