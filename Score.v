@@ -10,7 +10,7 @@ module Score (
 
     // 行列轉換成一維索引，考慮磚塊僅占上面 7 行，且每個磚塊為 1x2
     wire [6:0] brick_index; // 磚塊索引擴展為 7 位元以支援 7x16
-    assign brick_index = Ball_rowIndex * 8 + (Ball_colIndex >> 1); // 每行有 8 個磚塊
+    assign brick_index = (Ball_rowIndex-1) * 8 + (Ball_colIndex >> 1); // 每行有 8 個磚塊
 
     // 初始化與功能實現
     always @(posedge clock or negedge reset) begin
@@ -19,7 +19,7 @@ module Score (
             score <= 10'd0;                                                // 分數重置為 0
         end else begin
             // 碰撞處理
-            if (Ball_rowIndex < 7 && Bricks[brick_index] == 1'b1) begin
+            if (Bricks[brick_index] == 1'b1) begin
                 Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
                 score <= score + 1; // 分數加 1
             end else begin
