@@ -4,7 +4,7 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	input              reset, clock;
 	output reg [3:0]   Ball_rowIndex, Ball_colIndex;
 	output reg [1:0]   Ball_direction;
-  output reg         IsGameOver;
+  	output reg         IsGameOver;
 
 	function isSomethingThere;
 		input [3:0]   row;
@@ -25,13 +25,13 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 
 	wire upward_collision = (Ball_rowIndex == 4'd0) ? 1 : isSomethingThere(Ball_rowIndex - 1, Ball_colIndex, data);
 	wire rightward_collision = (Ball_colIndex == 4'd0) ? 1 : isSomethingThere(Ball_rowIndex, Ball_colIndex - 1, data);
-  wire downward_collision = (Ball_rowIndex == 4'd11) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex, data);
+  	wire downward_collision = (Ball_rowIndex == 4'd11) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex, data);
 	wire leftward_collision = (Ball_colIndex == 4'd15) ? 1 : isSomethingThere(Ball_rowIndex, Ball_colIndex + 1, data);
 	
 	wire ur_collision = (Ball_rowIndex == 4'd0 || Ball_colIndex == 4'd0) ? 1 : isSomethingThere(Ball_rowIndex - 1, Ball_colIndex - 1, data);
 	wire ul_collision = (Ball_rowIndex == 4'd0 || Ball_colIndex == 4'd15) ? 1 : isSomethingThere(Ball_rowIndex - 1, Ball_colIndex + 1, data);
-  wire dr_collision = (Ball_rowIndex == 4'd11 || Ball_colIndex == 4'd0) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex - 1, data);
-  wire dl_collision = (Ball_rowIndex == 4'd11 || Ball_colIndex == 4'd15) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex + 1, data);
+	wire dr_collision = (Ball_rowIndex == 4'd11 || Ball_colIndex == 4'd0) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex - 1, data);
+	wire dl_collision = (Ball_rowIndex == 4'd11 || Ball_colIndex == 4'd15) ? 1 : isSomethingThere(Ball_rowIndex + 1, Ball_colIndex + 1, data);
 
 	parameter UP_RIGHT = 2'b00;
 	parameter UP_LEFT = 2'b01;
@@ -49,9 +49,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 			Ball_direction <= UP_RIGHT;
       			IsGameOver <= 1'b0;
 		end
-   	else if (Ball_rowIndex == 4'd11) begin
-        	IsGameOver <= 1'b1;
-    	end
+	   	else if (Ball_rowIndex == 4'd11) begin
+	        	IsGameOver <= 1'b1;
+	    	end
 		else begin
 			Ball_rowIndex <= next_rowIndex;
 			Ball_colIndex <= next_colIndex;
