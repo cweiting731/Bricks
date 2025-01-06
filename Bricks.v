@@ -30,6 +30,7 @@ wire [3:0] ball_direction;
 wire [55:0] bricks;
 wire [191:0] data;
 wire [191:0] game_data;
+wire IsGameOver;
 
 FrequencyDivider FD(
     .clock(clock), 
@@ -109,6 +110,7 @@ CombineToMatrix CTM(
     .ball_rowIndex(ball_rowIndex), 
     .ball_colIndex(ball_colIndex), 
     .bricks(bricks), 
+    .IsGameOver(IsGameOver),
     .data(data),
     .game_data(game_data)
 );
