@@ -27,7 +27,7 @@ wire [15:0] plate_row;
 wire [3:0] ball_rowIndex;
 wire [3:0] ball_colIndex;
 wire [3:0] ball_direction;
-wire [95:0] bricks;
+wire [55:0] bricks;
 wire [191:0] data;
 
 FrequencyDivider FD(
