@@ -40,13 +40,14 @@ parameter V_SYNC_PAUSE = 2,
 
 reg clk_25MHz;
 
-always @(posedge clock or negedge reset)
+// always @(posedge clock or negedge reset)
+always @(posedge clock)
 begin
-    if(!reset)
-    begin
-        clk_25MHz <= 1'b0;
-    end
-    else
+    // if(!reset)
+    // begin
+        // clk_25MHz <= 1'b0;
+    // end
+    // else
     begin
         clk_25MHz <= ~clk_25MHz;
     end
@@ -60,13 +61,15 @@ end
 
 reg [11:0] h_count;
 
-always @(posedge clk_25MHz or negedge reset)
+// always @(posedge clk_25MHz or negedge reset)
+always @(posedge clk_25MHz)
 begin
-    if(!reset)
-    begin
-        h_count <= 12'd0;
-    end
-    else if(h_count == H_LINE_PERIOD - 1)
+    // if(!reset)
+    // begin
+        // h_count <= 12'd0;
+    // end
+    // else if(h_count == H_LINE_PERIOD - 1)
+    if(h_count == H_LINE_PERIOD - 1)
     begin
         h_count <= 12'd0;
     end
@@ -86,13 +89,15 @@ assign hSync = (h_count < H_SYNC_PULSE) ? 1'b0 : 1'b1;
 
 reg [11:0] v_count;
 
-always @(posedge clk_25MHz or negedge reset)
+// always @(posedge clk_25MHz or negedge reset)
+always @(posedge clk_25MHz)
 begin
-    if(!reset)
-    begin
-        v_count <= 12'd0;
-    end
-    else if(v_count == V_FRAME_PERIOD - 1)
+    // if(!reset)
+    // begin
+        // v_count <= 12'd0;
+    // end
+    // else if(v_count == V_FRAME_PERIOD - 1)
+    if(v_count == V_FRAME_PERIOD - 1)
     begin
         v_count <= 12'd0;
     end
@@ -124,16 +129,18 @@ assign active_flag = (h_count >= (H_SYNC_PULSE + H_BACK_PORCH)) &&
 
 reg [11:0] RGBcomponent;    // R=[11:8], G=[7:4], B=[3:0]
 reg [18:0] pixelCount;
-always @(posedge clk_25MHz or negedge reset)
+// always @(posedge clk_25MHz or negedge reset)
+always @(posedge clk_25MHz)
 begin
-    if(!reset) 
-    begin
-        RGBcomponent[11:8] <= 4'b0000;
-        RGBcomponent[7:4]  <= 4'b0000;
-        RGBcomponent[3:0]  <= 4'b0000;
-        pixelCount <= 19'd0;
-    end
-    else if(active_flag)
+    // if(!reset) 
+    // begin
+    //     RGBcomponent[11:8] <= 4'b0000;
+    //     RGBcomponent[7:4]  <= 4'b0000;
+    //     RGBcomponent[3:0]  <= 4'b0000;
+    //     pixelCount <= 19'd0;
+    // end
+    // else if(active_flag)
+    if(active_flag)
     begin
         // assert(pixelCount >= 0 && pixelCount <= 307199)
         if(pixelCount == 19'd307199)
@@ -164,15 +171,17 @@ end
 // display
 ////////////////////////////////////////////////////////////
 
-always @(posedge clk_25MHz or negedge reset)
+// always @(posedge clk_25MHz or negedge reset)
+always @(posedge clk_25MHz)
 begin
-    if(!reset) 
-    begin
-        r <= 4'b0000;
-        g <= 4'b0000;
-        b <= 4'b0000;
-    end
-    else if(active_flag)
+    // if(!reset) 
+    // begin
+    //     r <= 4'b0000;
+    //     g <= 4'b0000;
+    //     b <= 4'b0000;
+    // end
+    // else if(active_flag)
+    if(active_flag)
     begin
         r <= RGBcomponent[11:8];
         g <= RGBcomponent[7:4];
