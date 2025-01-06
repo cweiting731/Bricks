@@ -115,11 +115,6 @@ CombineToMatrix CTM(
     .game_data(game_data)
 );
 
-PosReset PR(
-    .reset(reset),
-    .IsGameOver(IsGameOver)
-);
-
 VGAdisplay VGA(
     .clock(clock),
     .reset(reset),
