@@ -60,6 +60,7 @@ ball_movement BM(
     .data(game_data),
     .reset(reset), 
     .clock(clock2HZ), 
+    .IsGameOver(IsGameOver), 
     .Ball_rowIndex(ball_rowIndex),
     .Ball_colIndex(ball_colIndex),
     .Ball_direction(ball_direction)

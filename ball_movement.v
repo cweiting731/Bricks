@@ -1,7 +1,7 @@
-module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_direction);
+module ball_movement(data, reset, clock, IsGameOver, Ball_rowIndex, Ball_colIndex, Ball_direction);
 
 	input      [191:0] data;
-	input              reset, clock;
+	input              reset, clock, IsGameOver;
 	output reg [3:0]   Ball_rowIndex, Ball_colIndex;
 	output reg [1:0]   Ball_direction;
 
@@ -43,6 +43,11 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 	//sequencial part
 	always@(posedge clock or negedge reset) begin
 		if(!reset) begin
+			Ball_rowIndex <= 4'd9;
+			Ball_colIndex <= 4'd7;
+			Ball_direction <= UP_RIGHT;
+		end
+		else if (IsGameOver == 1'b1) begin
 			Ball_rowIndex <= 4'd9;
 			Ball_colIndex <= 4'd7;
 			Ball_direction <= UP_RIGHT;

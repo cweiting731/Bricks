@@ -19,10 +19,15 @@ module Score (
     always @(posedge clock or negedge reset) begin
         if (!reset) begin
             Bricks <= 64'hFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
-				Bricks[71:40] = 32'b0;
+				Bricks[71:40] <= 32'b0;
             score <= 10'd0; 				// 分數重置為 0
-				IsGameOver = 1'b0;
-        end else begin
+				IsGameOver <= 1'b0;
+		end else if (IsGameOver == 1'b1) begin
+            Bricks <= 64'hFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
+				Bricks[71:40] <= 32'b0;
+            score <= 10'd0; 				// 分數重置為 0
+				IsGameOver <= 1'b1;
+	    end else begin
             // 碰撞處理
 				if (Ball_rowIndex <= 7 && Ball_rowIndex != 0) begin
 					if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin
@@ -95,7 +100,7 @@ module Score (
 						score <= score + 0;
 					end
 				end else if (Ball_rowIndex == 11) begin
-				   IsGameOver = 1'b1;
+				   IsGameOver <= 1'b1;
 					score <= 10'd0;
 			   end else begin
 				   score <= score + 0;
