@@ -85,6 +85,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 				else if(ur_collision) begin
 					next_direction = DOWN_LEFT;
 				end
+				else begin
+					next_direction = UP_RIGHT;
+				end
 			end
 			
 			UP_LEFT: begin
@@ -109,6 +112,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 				end
 				else if(ul_collision) begin
 					next_direction = DOWN_RIGHT;
+				end
+				else begin
+					next_direction = UP_LEFT;
 				end
 			end
 			
@@ -135,6 +141,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 				else if(dr_collision) begin
 					next_direction = UP_LEFT;
 				end
+				else begin
+					next_direction = DOWN_RIGHT;
+				end
 			end
 				
 			default : begin
@@ -159,6 +168,9 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 				end
 				else if(dl_collision) begin
 					next_direction = UP_RIGHT;
+				end
+				else begin
+					next_direction = DOWN_LEFT;
 				end
 			end
 		endcase
