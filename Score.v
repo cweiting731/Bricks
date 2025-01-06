@@ -12,17 +12,19 @@ module Score (
     // 行列轉換成一維索引，考慮磚塊僅占上面 7 行，且每個磚塊為 1x2
     wire [6:0] brick_index; // 磚塊索引擴展為 7 位元以支援 7x16
     assign brick_index = (Ball_rowIndex-1) * 8 + (Ball_colIndex >> 1); // 每行有 8 個磚塊
+	wire [6:0] brick_index_plus_7;
+    assign brick_index_plus_7 = brick_index + 7;
 
     // 初始化與功能實現
     always @(posedge clock or negedge reset) begin
         if (!reset) begin
             Bricks <= 64'hFFFFFFFFFFFFFFFF; // 上面 7 行磚塊設為 1
-				Bricks[71:56] = 16'b0;
+				Bricks[71:40] = 32'b0;
             score <= 10'd0; 				// 分數重置為 0
 				IsGameOver = 1'b0;
         end else begin
             // 碰撞處理
-				if (Ball_rowIndex <= 7) begin
+				if (Ball_rowIndex <= 7 && Ball_rowIndex != 0) begin
 					if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin
 						 Bricks[brick_index] <= 1'b0;
 						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
@@ -63,10 +65,10 @@ module Score (
 						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_colIndex != 0) begin //right
 						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
-						 score <= score + 5; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_colIndex != 15) begin //left
 						 Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
-						 score <= score + 6; // 分數加 1
+						 score <= score + 1; // 分數加 1
 					end else if (Bricks[brick_index-1] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin //right
 						 Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
 						 score <= score + 1; // 分數加 1
@@ -81,6 +83,16 @@ module Score (
 						 score <= score + 1; // 分數加 1
 					end else begin
 					    score <= score + 0;
+					end
+				end else if (Ball_rowIndex == 0) begin
+					if (Bricks[brick_index_plus_7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_colIndex != 0) begin //right
+						 Bricks[brick_index_plus_7] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+2] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_colIndex != 15) begin //left
+						 Bricks[brick_index_plus_7+2] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else begin
+						score <= score + 0;
 					end
 				end else if (Ball_rowIndex == 11) begin
 				   IsGameOver = 1'b1;
