@@ -72,7 +72,8 @@ Score S(
     .reset(reset), 
     .clock(clock2HZ),
     .Bricks(bricks), 
-    .score(score) 
+    .score(score), 
+    .IsGameOver(IsGameOver)
 );
 
 ScoreProcessor SP(
