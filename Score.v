@@ -19,69 +19,69 @@ module Score (
             score <= 10'd0;  // 分數重置為 0
         end else begin
             // 碰撞處理
-            if (Ball_rowIndex <= 7) begin
-                if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0) begin
-                        Bricks[brick_index] <= 1'b0;
-                        Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+15] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0) begin
-                        Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+15] <= 1'b0;
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15) begin
-                        Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+17] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15) begin
-                        Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+17] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin
-                        Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index-1] == 1'b1 && Bricks[brick_index+16] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin
-                        Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin
-                        Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+1] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin
-                        Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
-                        Bricks[brick_index+1] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 2; // 分數加 1
-                end else if (Bricks[brick_index] == 1'b1) begin
-                        Bricks[brick_index] <= 1'b0;
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+16] == 1'b1) begin
-                        Bricks[brick_index+16] <= 1'b0;
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_colIndex != 0) begin //right
-                        Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_colIndex != 15) begin //left
-                        Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index-1] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0) begin //right
-                        Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+1] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15) begin //right
-                        Bricks[brick_index+1] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+15] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin //right
-                        Bricks[brick_index+15] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else if (Bricks[brick_index+17] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin //right
-                        Bricks[brick_index+17] <= 1'b0; // 刪除自身磚塊
-                        score <= score + 1; // 分數加 1
-                end else begin
-                    score <= score;
-                end
-            end else begin
-                score <= score;
-            end
+				if (Ball_rowIndex <= 7) begin
+					if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index] <= 1'b0;
+						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+15] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+15] <= 1'b0;
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index] == 1'b1 && Bricks[brick_index+17] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+17] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin
+						 Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index-1] == 1'b1 && Bricks[brick_index+16] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin
+						 Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index+16] == 1'b1 && Bricks[brick_index+1] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index+16] <= 1'b0; // 刪除自身磚塊
+						 Bricks[brick_index+1] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 2; // 分數加 1
+					end else if (Bricks[brick_index] == 1'b1 && Ball_rowIndex != 0) begin
+						 Bricks[brick_index] <= 1'b0;
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+16] == 1'b1) begin
+						 Bricks[brick_index+16] <= 1'b0;
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+7] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_colIndex != 0) begin //right
+						 Bricks[brick_index+7] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+9] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_colIndex != 15) begin //left
+						 Bricks[brick_index+9] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index-1] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b00 && Ball_colIndex != 0 && Ball_rowIndex != 0) begin //right
+						 Bricks[brick_index-1] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+1] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b01 && Ball_colIndex != 15 && Ball_rowIndex != 0) begin //right
+						 Bricks[brick_index+1] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+15] == 1'b1 && Ball_colIndex[0] == 1'b0 && Ball_direction == 2'b10 && Ball_colIndex != 0) begin //right
+						 Bricks[brick_index+15] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else if (Bricks[brick_index+17] == 1'b1 && Ball_colIndex[0] == 1'b1 && Ball_direction == 2'b11 && Ball_colIndex != 15) begin //right
+						 Bricks[brick_index+17] <= 1'b0; // 刪除自身磚塊
+						 score <= score + 1; // 分數加 1
+					end else begin
+					    score <= score;
+					end
+			   end else begin
+				    score <= score;
+				end
         end
     end
 

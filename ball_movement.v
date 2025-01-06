@@ -115,7 +115,7 @@ module ball_movement(data, reset, clock, Ball_rowIndex, Ball_colIndex, Ball_dire
 			DOWN_RIGHT : begin
 				if(downward_collision && !rightward_collision) begin
 					if(ur_collision) begin
-						next_direction = DOWN_LEFT;
+						next_direction = UP_LEFT;
 					end
 					else begin
 						next_direction = UP_RIGHT;
